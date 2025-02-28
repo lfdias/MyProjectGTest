@@ -1,35 +1,23 @@
-# Install WSL in your machine (Windows command line)
-wsl --install
-After this open WSL command line 
+# General
+Please follow the instructions below to install the tutorial BEFORE YOU ARRIVE to the tutorial. We strongly suggest you do this a few days before the conference, so you have some time to deal with installation issues, if you encounter any. 
+We will not spend time in the tutorial on installations, and arriving with a PC that is not ready would mean you will spend much of the tutorial time on mundane installations. 
+If you encounter problems installing, try first Google, ChatGPT, Microsoft CoPilot or your favourite knowledge source. If all else fails, contact the tutorial owner Luis Dias  at l.dias@andersenlab.com
 
-# GIT 
-VERSION: git --version
-INSTALL: sudo apt install git
-REMOVE: sudo apt remove git
-
-
-# STEP 1 - Cmake 
-INSTALL: sudo apt install cmake=3.22.1-1ubuntu1.22.04.2
-REMOVE: sudo apt remove --purge cmake
-
-# STEP 2 - Google Tests
-INSTALL: sudo apt install libgtest-dev=1.11.0-3
-REMOVE: sudo apt remove --purge libgtest-dev
-
-# Step 3 - Install project pre requirements
-Go to project folder example "C:\Users\l.dias\Desktop\GIT_repositories\gtests_master>" and run the command:
-pip install -r requirements.txt
+# Pre-requisites
+The instructions below assume the following:
+- You are running Windows 10 or 11 (the instructions were tested on Windows 11)
+- You have an internet connection
+- You have a github account.
+   --> If not: Go to https://github.com/signup and create one.
 
 
+# Step 1: Install WSL on your machine
+- Open a Windows command shell ("cmd") and run the following command. It will take a few minutes to complete. 
+```
+wsl --install -d Ubuntu-22.04
+```
 
-
-#####################
-#####################
-#####################
-#####################
-
-
-
+When the installation is complete, it will prompt you to define a username and a password. Remember your username and password - you may need them in the future. 
 
 The installation will complete. You will be in the Linux shell.
 
@@ -51,7 +39,7 @@ If the response is something like "-bash: /usr/bin/git: No such file or director
 sudo apt install git
 ```
 
-To copy the tutorial files from git, you will need to have a Personal Access Token. Here is how to generate a Personal Access Token:
+In order to copy the tutorial files from git, you will need to have a Personal Access Token. Here is how to generate a Personal Access Token:
 
 - Log into your git account via a browser
 - Go to your GitHub account settings: Click on your username icon at the top-right and select "Settings"
@@ -92,7 +80,7 @@ In the Linux shell, run:
 git clone https://github.com/lfdias/gtests_master.git
 ```
 
-You will be prompted for your GitHub username and password... BUT!!! Instead of using the password, paste your Personal Access Token. 
+You will be prompted for your GitHub username and password... BUT!!! instead of the password, paste your Personal Access Token. 
 
 In the Linux shell, run: 
 ```
