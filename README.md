@@ -3,8 +3,9 @@ Please follow the instructions below to install the tutorial BEFORE YOU ARRIVE t
 We will not spend time in the tutorial on installations, and arriving with a PC that is not ready would mean you will spend much of the tutorial time on mundane installations. 
 If you encounter problems installing, try first Google, ChatGPT, Microsoft CoPilot or your favourite knowledge source. If all else fails, contact the tutorial owner Luis Dias  at l.dias@andersenlab.com
 
-
+## ---------------------------------------------------------------------------
 ## ------------------------------ Windows setup ------------------------------
+## ---------------------------------------------------------------------------
 
 # Pre-requisites  
 The instructions below assume the following:
@@ -121,8 +122,9 @@ source ~/.bashrc
 ```
 
 
-
+## -------------------------------------------------------------------------
 ## ------------------------------ Linux setup ------------------------------
+## -------------------------------------------------------------------------
 
 # Pre-requisites  
 We assume you are using Ubuntu 22.04 or higher. For lower versions: we are pretty sure the instructions will work, but did not try them
