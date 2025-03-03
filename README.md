@@ -4,7 +4,7 @@ We will not spend time in the tutorial on installations, and arriving with a PC 
 If you encounter problems installing, try first Google, ChatGPT, Microsoft CoPilot or your favourite knowledge source. If all else fails, contact the tutorial owner Luis Dias  at l.dias@andersenlab.com
 
 
-## Windows ------------------------------
+## ------------------------------ Windows setup ------------------------------
 
 # Pre-requisites  
 
