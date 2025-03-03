@@ -7,7 +7,6 @@ If you encounter problems installing, try first Google, ChatGPT, Microsoft CoPil
 ## ------------------------------ Windows setup ------------------------------
 
 # Pre-requisites  
-
 The instructions below assume the following:
 - You are running Windows 10 or 11 (the instructions were tested on Windows 11)
 - You have an internet connection
@@ -123,8 +122,7 @@ source ~/.bashrc
 
 
 
-#############
-### Linux ###
-#############
+## ------------------------------ Linux setup ------------------------------
 
-
+# Pre-requisites  
+We assume you are using Ubuntu 22.04 or higher. For lower versions: we are pretty sure the instructions will work, but did not try them
