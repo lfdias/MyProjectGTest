@@ -3,9 +3,9 @@
 
 class MyMath {
 public:
-    virtual ~MyMath() = default;
-    virtual int add(int a, int b);
-    virtual int multiply(int a, int b);
+    ~MyMath() = default;
+    int add(int a, int b);
+    int multiply(int a, int b);
 };
 
 #endif // MY_MATH_H

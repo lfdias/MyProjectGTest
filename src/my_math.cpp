@@ -7,3 +7,4 @@ int MyMath::add(int a, int b) {
 int MyMath::multiply(int a, int b) {
     return a * b;
 }
+
