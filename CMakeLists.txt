@@ -1,32 +1,32 @@
-# Versão mínima do CMake
+# Minimum version of CMake required
 cmake_minimum_required(VERSION 3.10)
 
-# Nome do projeto e padrão do C++
+# Project name and C++ standard
 project(MyMathProject LANGUAGES CXX)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
 
-# Diretórios de cabeçalho
+# Header directories
 include_directories(include)
 
-# Adicionar o Google Test
+# Add Google Test
 find_package(GTest REQUIRED)
 include_directories(${GTEST_INCLUDE_DIRS})
 
-
-# Separação clara entre os arquivos fonte do projeto e de teste
+# Clear separation between source files of the project and test files
 set(SOURCE_FILES
-    src/my_math.cpp     # DIFERENÇA: Adiciona os arquivos de código-fonte do projeto.
-
+    src/my_math.cpp
+    src/utilities.cpp    
 )
 
 set(TEST_FILES
-    test/test_my_math.cpp # DIFERENÇA: Testes organizados em uma variável separada.
-    test/main_test_runner.cpp    # DIFERENÇA: Adiciona um arquivo `main` para rodar todos os testes.
+    test/test_my_math.cpp 
+    test/main_test_runner.cpp
+    test/test_utilities.cpp    
 )
 
-# Adicionar todos os arquivos no executável
-add_executable(run_tests ${SOURCE_FILES} ${TEST_FILES}) # DIFERENÇA: Integra os arquivos de teste e do projeto.
+# Add all files to the executable
+add_executable(run_tests ${SOURCE_FILES} ${TEST_FILES})
 
-# Linkar o Google Test e pthread
+# Link Google Test and pthread
 target_link_libraries(run_tests ${GTEST_LIBRARIES} pthread)
