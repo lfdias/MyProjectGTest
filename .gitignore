@@ -1,6 +1,7 @@
 # Prerequisites
 *.d
 build/*
+!build/README.md
 
 # Compiled Object files
 *.slo
