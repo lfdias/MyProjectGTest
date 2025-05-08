@@ -13,11 +13,4 @@ TEST(MyMathTest, MultiplyTest) {
     EXPECT_EQ(math.multiply(-1, 1), -1);
 }
 
-// Main function for Google Test
-int main(int argc, char **argv) {
-    ::testing::InitGoogleTest(&argc, argv);
-    return RUN_ALL_TESTS();
-}
-
-
 
