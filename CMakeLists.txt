@@ -10,23 +10,22 @@ set(CMAKE_CXX_STANDARD_REQUIRED True)
 include_directories(include)
 
 # Add Google Test
-find_package(GTest REQUIRED)
-include_directories(${GTEST_INCLUDE_DIRS})
+add_subdirectory(external/googletest)
 
 # Clear separation between source files of the project and test files
 set(SOURCE_FILES
     src/my_math.cpp
-    src/utilities.cpp    
+    src/utilities.cpp
 )
 
 set(TEST_FILES
-    test/test_my_math.cpp 
+    test/test_my_math.cpp
     test/main_test_runner.cpp
-    test/test_utilities.cpp    
+    test/test_utilities.cpp
 )
 
 # Add all files to the executable
 add_executable(run_tests ${SOURCE_FILES} ${TEST_FILES})
 
 # Link Google Test and pthread
-target_link_libraries(run_tests ${GTEST_LIBRARIES} pthread)
+target_link_libraries(run_tests gtest gmock pthread)

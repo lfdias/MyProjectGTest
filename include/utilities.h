@@ -1,6 +1,10 @@
 #ifndef UTILITIES_H
 #define UTILITIES_H
 
-bool isPair(int number);
+class Utilities {
+public:
+    virtual ~Utilities();
+    virtual bool isPair(int number) const; 
+};
 
 #endif // UTILITIES_H

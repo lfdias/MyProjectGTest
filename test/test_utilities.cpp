@@ -3,6 +3,9 @@
 
 // Test for isPair function
 TEST(UtilitiesTest, IsPair) {
-    EXPECT_TRUE(isPair(0));    // 0 is even
-    EXPECT_TRUE(isPair(2));    // 2 is even
+
+    Utilities utilities_obj;
+
+    EXPECT_TRUE(utilities_obj.isPair(0));    // 0 is even
+    EXPECT_TRUE(utilities_obj.isPair(2));    // 2 is even
 }

@@ -6,7 +6,7 @@
 
 class MockUtilities : public Utilities {
 public:
-    MOCK_METHOD(bool, isPair, (int number), (const, override));
+    MOCK_METHOD(bool, isPair, (int number), (const));  
 };
 
 #endif // MOCK_UTILITIES_H
