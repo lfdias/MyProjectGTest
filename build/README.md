@@ -7,3 +7,9 @@ git config --global user.email "l.dias@andersenlab.com"
 cmake .. 
 make 
 ./run_tests
+
+
+# Coverage generation 
+lcov --directory . --capture --output-file coverage.info
+lcov --remove coverage.info '/usr/*' '*/external/*' --output-file filtered_coverage.info
+genhtml filtered_coverage.info --output-directory coverage_html
