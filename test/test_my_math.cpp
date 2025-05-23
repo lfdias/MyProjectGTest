@@ -17,5 +17,3 @@ TEST(MyMathTest, MultiplyTest) {
     EXPECT_EQ(math.multiply(2, 3), 6);
     EXPECT_EQ(math.multiply(-1, 1), -1);
 }
-
-

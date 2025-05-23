@@ -15,7 +15,7 @@ add_subdirectory(external/googletest)
 # Clear separation between source files of the project and test files
 set(SOURCE_FILES
     src/my_math.cpp
-    src/utilities.cpp
+    src/utilities.cpp    
 )
 
 set(TEST_FILES
@@ -29,3 +29,10 @@ add_executable(run_tests ${SOURCE_FILES} ${TEST_FILES})
 
 # Link Google Test and pthread
 target_link_libraries(run_tests gtest gmock pthread)
+
+# Enable coverage flags for GCC
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -g -O0 --coverage -fprofile-arcs -ftest-coverage")
+set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -g -O0 --coverage -fprofile-arcs -ftest-coverage")
+
+# Link coverage libraries
+set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} --coverage")
