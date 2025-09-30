@@ -15,13 +15,29 @@ add_subdirectory(external/googletest)
 # Clear separation between source files of the project and test files
 set(SOURCE_FILES
     src/my_math.cpp
-    src/utilities.cpp    
+    src/utilities.cpp
+
+    src/Exercises/CT1_asserts.cpp
+    src/Exercises/CT2_fixture.cpp
+    src/Exercises/CT3_parameterized.cpp 
+    src/Exercises/CT4_typed.cpp
+    src/Exercises/CT5_death.cpp 
+    src/Exercises/CT6_predicated.cpp
+    src/Exercises/CT7_skip.cpp
 )
 
 set(TEST_FILES
     test/test_my_math.cpp
     test/main_test_runner.cpp
     test/test_utilities.cpp
+
+    test/Exercises/test_CT1_asserts.cpp
+    test/Exercises/test_CT2_fixture.cpp
+    test/Exercises/test_CT3_parameterized.cpp  
+    test/Exercises/test_CT4_typed.cpp
+    test/Exercises/test_CT5_death.cpp
+    test/Exercises/test_CT6_predicated.cpp 
+    test/Exercises/test_CT7_skip.cpp 
 )
 
 # Add all files to the executable
