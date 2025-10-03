@@ -1,81 +1,125 @@
 #include <gtest/gtest.h>
+#include "../../src/Exercises/CT1_asserts.cpp"  // include the single combined file
 #include <string>
 
+using namespace bank;
 
-#include "../../src/Exercises/CT1_asserts.cpp" 
-
-using bank::BankAccount;
-
-// 1) ASSERT_TRUE — FATAL: stops this test on failure
-TEST(Bank, IbanLooksValid_ASSERT_TRUE) {
-    ASSERT_TRUE(BankAccount::IsValidIbanBasic("PT5000020123123456789"));
-    BankAccount a("Alice", 1000.0); // only runs if ASSERT above passes
-    EXPECT_EQ(a.Balance(), 1000.0);
+// -----------------------------
+// Function under test: IsPositiveAmount
+// -----------------------------
+TEST(CT1_IsPositiveAmountTests, TrueAndFalseCases)
+{
+    EXPECT_TRUE(IsPositiveAmount(10.0));
+    EXPECT_FALSE(IsPositiveAmount(0.0));
+    ASSERT_TRUE(IsPositiveAmount(0.01));
 }
 
-// 2) EXPECT_TRUE — non-fatal
-// 3) EXPECT_FALSE — non-fatal
-TEST(Bank, OwnerPresent_EXPECT_TRUE_FALSE) {
-    BankAccount a("Bob", 250.0);
-    EXPECT_TRUE(!a.Owner().empty());   // 2) EXPECT_TRUE
-    EXPECT_FALSE(a.Owner() == "");     // 3) EXPECT_FALSE
+TEST(CT1_IsPositiveAmountTests, NegativeCase)
+{
+    EXPECT_FALSE(IsPositiveAmount(-0.01));
 }
 
-// 4) EXPECT_EQ — equality
-// 5) EXPECT_NE — inequality
-TEST(Bank, EqualityBasics_EXPECT_EQ_NE) {
-    BankAccount a("Carol", 300.0);
-    EXPECT_EQ(a.Balance(), 300.0);             // 4)
-    EXPECT_NE(a.Owner(), std::string("Dan"));  // 5)
+// -----------------------------
+// Function under test: deposit
+// -----------------------------
+TEST(CT1_DepositTests, IncreasesBalance)
+{
+    Account a{"Alice", 100.0};
+    deposit(a, 50.0);
+    EXPECT_EQ(a.balance, 150.0);
 }
 
-// 6) EXPECT_LT — <
-// 7) EXPECT_LE — <=
-// 8) EXPECT_GT — >
-// 9) EXPECT_GE — >=
-TEST(Bank, Fees_EXPECT_LT_LE_GT_GE) {
-    EXPECT_LT(BankAccount::MonthlyFeeFor(1000.0), 5.0);   // 6)
-    EXPECT_LE(BankAccount::MonthlyFeeFor(1000.0), 2.5);   // 7)
-    EXPECT_GT(BankAccount::MonthlyFeeFor(6000.0), -0.1);  // 8)
-    EXPECT_GE(BankAccount::MonthlyFeeFor(6000.0), 0.0);   // 9)
+TEST(CT1_DepositTests, RejectsNonPositiveAmount)
+{
+    Account a{"Alice", 100.0};
+    EXPECT_THROW(deposit(a, 0.0), std::invalid_argument);
+    EXPECT_THROW(deposit(a, -5.0), std::invalid_argument);
 }
 
-// 10) EXPECT_THROW — throws a specific exception type
-TEST(Bank, WithdrawTooMuch_EXPECT_THROW) {
-    BankAccount a("Eve", 100.0);
-    EXPECT_THROW(a.Withdraw(200.0), std::invalid_argument); // 10)
+// -----------------------------
+// Function under test: withdraw
+// -----------------------------
+TEST(CT1_WithdrawTests, DecreasesBalance)
+{
+    Account a{"Alice", 100.0};
+    withdraw(a, 20.0);
+    EXPECT_EQ(a.balance, 80.0);
 }
 
-// 11) EXPECT_NO_THROW — should not throw
-TEST(Bank, DepositOk_EXPECT_NO_THROW) {
-    BankAccount a("Fay", 100.0);
-    EXPECT_NO_THROW(a.Deposit(50.0)); // 11)
-    EXPECT_EQ(a.Balance(), 150.0);
+TEST(CT1_WithdrawTests, RejectsNonPositiveAmount)
+{
+    Account a{"Alice", 100.0};
+    EXPECT_THROW(withdraw(a, 0.0), std::invalid_argument);
 }
 
-// 12) EXPECT_ANY_THROW — throws anything
-TEST(Bank, BadDeposit_EXPECT_ANY_THROW) {
-    BankAccount a("Gus", 10.0);
-    EXPECT_ANY_THROW(a.Deposit(0)); // 12)
+TEST(CT1_WithdrawTests, RejectsInsufficientFunds)
+{
+    Account a{"Alice", 10.0};
+    EXPECT_THROW(withdraw(a, 20.0), std::runtime_error);
 }
 
-// 13) EXPECT_NEAR — doubles with absolute tolerance
-TEST(Bank, Interest_EXPECT_NEAR) {
-    BankAccount a("Hana", 1000.0);
-    double after = a.ApplyMonthlyInterest(0.0125); // +1.25% = 1012.5
-    EXPECT_NEAR(after, 1012.5, 1e-9); // 13)
+// -----------------------------
+// Function under test: transfer
+// -----------------------------
+TEST(CT1_TransferTests, MovesFundsBetweenAccounts)
+{
+    Account a{"Alice", 100.0};
+    Account b{"Bob",   0.0};
+    transfer(a, b, 40.0);
+    EXPECT_EQ(a.balance, 60.0);
+    EXPECT_EQ(b.balance, 40.0);
 }
 
-// 14) EXPECT_FLOAT_EQ — ULP-aware comparison for float
-TEST(Bank, Half_EXPECT_FLOAT_EQ) {
-    float h = BankAccount::Half(1.0f);
-    EXPECT_FLOAT_EQ(h, 0.5f); // 14)
+TEST(CT1_TransferTests, RejectsNonPositiveAmount)
+{
+    Account a{"Alice", 100.0};
+    Account b{"Bob",   0.0};
+    EXPECT_THROW(transfer(a, b, 0.0), std::invalid_argument);
+    EXPECT_THROW(transfer(a, b, -1.0), std::invalid_argument);
+    EXPECT_EQ(a.balance, 100.0);
+    EXPECT_EQ(b.balance, 0.0);
 }
 
-// 15) ASSERT_EQ — FATAL; useful as a precondition within the test
-TEST(Bank, WithdrawSequence_ASSERT_EQ) {
-    BankAccount a("Ivy", 200.0);
-    ASSERT_EQ(a.Balance(), 200.0); // 15) ensures precondition before proceeding
-    a.Withdraw(50.0);
-    EXPECT_EQ(a.Balance(), 150.0);
+TEST(CT1_TransferTests, RejectsInsufficientFundsAndKeepsDestUnchanged)
+{
+    Account a{"Alice", 30.0};
+    Account b{"Bob",   10.0};
+    EXPECT_THROW(transfer(a, b, 50.0), std::runtime_error);
+    EXPECT_EQ(a.balance, 30.0);
+    EXPECT_EQ(b.balance, 10.0);
+}
+
+// -----------------------------
+// Function under test: apply_simple_interest
+// -----------------------------
+TEST(CT1_InterestTests, ComputesSimpleInterestNear)
+{
+    double v = apply_simple_interest(100.0, 0.10, 36);
+    EXPECT_NEAR(v, 100.9863, 1e-3);
+}
+
+TEST(CT1_InterestTests, InvalidArgumentsThrow)
+{
+    EXPECT_THROW(apply_simple_interest(-100.0, 0.1, 10), std::invalid_argument);
+    EXPECT_THROW(apply_simple_interest(100.0, -0.1, 10), std::invalid_argument);
+    EXPECT_THROW(apply_simple_interest(100.0, 1.5, 10), std::invalid_argument);
+    EXPECT_THROW(apply_simple_interest(100.0, 0.1, -5), std::invalid_argument);
+}
+
+TEST(CT1_InterestTests, BoundaryValues)
+{
+    EXPECT_NEAR(apply_simple_interest(0.0,   0.10, 100), 0.0,   1e-12);
+    EXPECT_NEAR(apply_simple_interest(100.0, 0.00, 365), 100.0, 1e-12);
+    EXPECT_NEAR(apply_simple_interest(100.0, 1.00,   0), 100.0, 1e-12);
+    EXPECT_NEAR(apply_simple_interest(100.0, 1.00, 365), 200.0, 1e-9);
+}
+
+// -----------------------------
+// Type/struct-focused checks: Account (owner string)
+// -----------------------------
+TEST(CT1_AccountOwnerTests, CaseInsensitiveNameChecks)
+{
+    Account a{"ALICE", 0.0};
+    EXPECT_STRCASEEQ(a.owner.c_str(), "alice");
+    EXPECT_STRCASENE(a.owner.c_str(), "bob");
 }
