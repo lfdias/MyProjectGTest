@@ -17,30 +17,30 @@ struct Account
 };
 
 // Predicate: checks if amount is positive
-bool IsPositiveAmount(double a);
+bool CT1_IsPositiveAmount(double a);
 
 // Deposit money: amount must be > 0
-void deposit(Account& acc, double amount);
+void CT1_deposit(Account& acc, double amount);
 
 // Withdraw money: amount must be > 0 and <= balance
-void withdraw(Account& acc, double amount);
+void CT1_withdraw(Account& acc, double amount);
 
 // Transfer money: withdraw from one account, deposit to another
-void transfer(Account& from, Account& to, double amount);
+void CT1_transfer(Account& from, Account& to, double amount);
 
 // Apply simple interest
-double apply_simple_interest(double principal, double rate, int days);
+double CT1_apply_simple_interest(double principal, double rate, int days);
 
 // -----------------------------
 // Implementations
 // -----------------------------
 
-inline bool IsPositiveAmount(double a)
+inline bool CT1_IsPositiveAmount(double a)
 {
     return a > 0.0;
 }
 
-inline void deposit(Account& acc, double amount)
+inline void CT1_deposit(Account& acc, double amount)
 {
     if (amount <= 0.0)
     {
@@ -49,7 +49,7 @@ inline void deposit(Account& acc, double amount)
     acc.balance += amount;
 }
 
-inline void withdraw(Account& acc, double amount)
+inline void CT1_withdraw(Account& acc, double amount)
 {
     if (amount <= 0.0)
     {
@@ -62,13 +62,13 @@ inline void withdraw(Account& acc, double amount)
     acc.balance -= amount;
 }
 
-inline void transfer(Account& from, Account& to, double amount)
+inline void CT1_transfer(Account& from, Account& to, double amount)
 {
-    withdraw(from, amount);
-    deposit(to, amount);
+    CT1_withdraw(from, amount);
+    CT1_deposit(to, amount);
 }
 
-inline double apply_simple_interest(double principal, double rate, int days)
+inline double CT1_apply_simple_interest(double principal, double rate, int days)
 {
     if (principal < 0.0)
     {
