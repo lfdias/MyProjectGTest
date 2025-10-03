@@ -1,113 +1,152 @@
-// CT3 — Parameterized Tests with GoogleTest
-//
-// ❓ What is a parameterized test?
-//    It's a way to write the *same test logic once* and run it automatically
-//    over many inputs. Great for table-driven tests.
-//
-// 🧠 Core building blocks:
-//  1) A fixture type that *inherits* from ::testing::TestWithParam<T>
-//     - T is the type of "a single parameter set" you want to feed the test.
-//       Examples: double, std::tuple<int,double>, a custom struct, etc.
-//  2) A test body written with TEST_P (P = Parameterized), where you read the
-//     current parameters via GetParam().
-//  3) An instantiation with INSTANTIATE_TEST_SUITE_P(...), where you provide
-//     the concrete parameter values (e.g., ::testing::Values(...)).
-//
-// 🧾 In this file we show two suites:
-//   A) FeeParamTest
-//      - Type: std::tuple<double,double>  (balance, expectedFee)
-//      - We feed a table of pairs and check MonthlyFeeFor(balance) == expectedFee.
-//   B) InterestInvalidParamTest
-//      - Type: double  (monthlyRate)
-//      - We feed some invalid (negative) rates and assert that it throws.
-//
-// 🔧 Why a fixture at all?
-//     Even if you don't need SetUp/TearDown, TestWithParam<T> gives you the
-//     plumbing for GetParam(). If you *do* need SetUp/TearDown, just override
-//     them like in normal fixtures.
-//
-// 📁 No headers here: the test directly #includes the SUT .cpp for simplicity.
-//     In a real project, prefer headers + link a library.
-
 #include <gtest/gtest.h>
-#include <tuple>      // std::tuple
-#include <string>     // for nice comments / examples
-#include "../../src/Exercises/CT3_parameterized.cpp"  // adjust if your tree differs
+#include "../../src/Exercises/CT3_parameterized.cpp"
 
-// -----------------------------------------------------------------------------
-// Suite A: Fee table (balance -> expected fee)
-// -----------------------------------------------------------------------------
-//
-// 1) Define a fixture type. We don't need extra state, so the class is empty.
-//    We inherit from TestWithParam<std::tuple<double,double>> because each test
-//    instance will receive **one pair**: (balance, expectedFee).
-class FeeParamTest : public ::testing::TestWithParam<std::tuple<double, double>> {};
+using namespace bank;
 
-// 2) Write the test body with TEST_P (Parameterized). Inside, call GetParam() to
-//    retrieve this instance's parameters. Here we use structured bindings.
-TEST_P(FeeParamTest, ReturnsExpectedFee) {
-    const auto [balance, expectedFee] = GetParam();  // GetParam() gives the tuple
-    // EXPECT_DOUBLE_EQ is good for exact doubles that come from simple literals.
-    // If your calculation has rounding/FP error, use EXPECT_NEAR instead.
-    EXPECT_DOUBLE_EQ(bank::MonthlyFeeFor(balance), expectedFee);
+// ============================================================================
+// Parameter type: holds input balance, student flag, and expected fee
+// ============================================================================
+struct FeeCase {
+    double balance;
+    bool isStudent;
+    double expected;
+};
+
+// Parameterized fixture
+class CT3_MonthlyFee_Param : public ::testing::TestWithParam<FeeCase> {};
+
+// Single test body
+TEST_P(CT3_MonthlyFee_Param, ReturnsExpectedFee) {
+    const FeeCase& p = GetParam();
+    EXPECT_DOUBLE_EQ(CT3_MonthlyFee(p.balance, p.isStudent), p.expected);
 }
 
-// 3) Instantiate the suite with a *name*, the fixture type, and a generator of
-//    parameter values. ::testing::Values(...) expands into N independent test
-//    instances — one per tuple below.
-//    The "FeeTable" string becomes part of the test names in the output.
+// Instantiate with all coverage cases
 INSTANTIATE_TEST_SUITE_P(
-    FeeTable,                      // Instance name (prefix in test output)
-    FeeParamTest,                  // Which test suite to instantiate
-    ::testing::Values(             // Concrete parameter sets
-        std::make_tuple(     0.0,  5.0),
-        std::make_tuple(   999.99, 5.0),
-        std::make_tuple(  1000.0,  2.5),
-        std::make_tuple(  4999.99, 2.5),
-        std::make_tuple(  5000.0,  0.0),
-        std::make_tuple( 12000.0,  0.0)
+    CT3_MonthlyFee_Cases,
+    CT3_MonthlyFee_Param,
+    ::testing::Values(
+        // Invalid input
+        FeeCase{-1.0, false, 9999.0},
+        FeeCase{-1.0, true,  9999.0},
+
+        // Non-students
+        FeeCase{ 0.0,   false, 5.0},
+        FeeCase{999.9,  false, 5.0},
+        FeeCase{1000.0, false, 2.5},
+        FeeCase{4999.9, false, 2.5},
+        FeeCase{5000.0, false, 0.0},
+
+        // Students
+        FeeCase{ 0.0,   true, 2.5},
+        FeeCase{999.9,  true, 2.5},
+        FeeCase{1000.0, true, 1.0},
+        FeeCase{4999.9, true, 1.0},
+        FeeCase{5000.0, true, 0.0}
     )
 );
-// Resulting test names look like:
-//   FeeTable/ReturnsExpectedFee/0, FeeTable/ReturnsExpectedFee/1, ...
 
-// 💡 Tips for real code:
-// - If parameters are in a container, use ::testing::ValuesIn(container).
-// - For multiple independent dimensions, use std::tuple or ::testing::Combine.
-// - To customize how parameter values appear in test names, provide a
-//   name generator (see gtest docs for custom parameter name functions).
 
 // -----------------------------------------------------------------------------
-// Suite B: Invalid interest rates should throw
-// -----------------------------------------------------------------------------
+// Notes:
 //
-// Here each parameter is just a double (the monthlyRate). We want all *negative*
-// values to trigger an exception. So we feed a small list of negatives and write
-// a single TEST_P that checks EXPECT_THROW for each.
-class InterestInvalidParamTest : public ::testing::TestWithParam<double> {};
+// • Because the test includes the .cpp directly, do NOT also add that source
+//   file to your CMake target's SOURCE_FILES, or you'll get multiple definition.
+// • If you later change the negative-balance behavior to throw instead of using
+//   a sentinel, you can split the parameterization into two suites:
+//     - Valid cases with EXPECT_DOUBLE_EQ / EXPECT_NEAR.
+//     - Invalid cases with EXPECT_THROW.
+// -----------------------------------------------------------------------------
 
-TEST_P(InterestInvalidParamTest, NegativeRateThrows) {
-    const double badRate = GetParam();  // Each instance gets one rate
-    EXPECT_THROW(bank::ApplyMonthlyInterest(100.0, badRate), std::invalid_argument);
+
+/* SAME TEST WITHOUT PARAMETERIZED 
+
+
+// test/Exercises/test_CT3_no_parameterized.cpp
+#include <gtest/gtest.h>
+#include "../../src/Exercises/CT3_parameterized.cpp"  // includes CT3_MonthlyFee
+
+using namespace bank;
+
+// -----------------------------
+// Invalid input (negative balance)
+// -----------------------------
+TEST(CT3_MonthlyFee_Tests, NegativeBalance_NonStudent_ReturnsSentinel)
+{
+    EXPECT_DOUBLE_EQ(CT3_MonthlyFee(-1.0, false), 9999.0);
 }
 
-// Instantiate with a few negative values.
-// Each value below becomes its *own* test instance.
-INSTANTIATE_TEST_SUITE_P(
-    BadRates,                      // Instance name (prefix in test output)
-    InterestInvalidParamTest,      // Which test suite to instantiate
-    ::testing::Values(-0.0001, -0.01, -1.0)
-);
+TEST(CT3_MonthlyFee_Tests, NegativeBalance_Student_ReturnsSentinel)
+{
+    EXPECT_DOUBLE_EQ(CT3_MonthlyFee(-1.0, true), 9999.0);
+}
 
-// -----------------------------------------------------------------------------
-// (Optional) Quick reference:
-//
-//  - TEST_P(SuiteName, TestName)      : Defines a parameterized test body.
-//  - INSTANTIATE_TEST_SUITE_P(Name, SuiteName, Generator)
-//                                     : Binds concrete params to that body.
-//  - TestWithParam<T>                 : Base providing GetParam() of type T.
-//  - GetParam()                       : Returns the params for *this* instance.
-//  - ::testing::Values(a,b,c,...)     : Inline list of parameters.
-//  - ::testing::ValuesIn(vec)         : Use an existing container of params.
-//  - ::testing::Combine(a,b,...)      : Cartesian product for tuples.
-// -----------------------------------------------------------------------------
+// -----------------------------
+// Non-student cases
+// Rules:
+//   balance < 1000   -> 5.0
+//   balance < 5000   -> 2.5
+//   balance >= 5000  -> 0.0
+// -----------------------------
+TEST(CT3_MonthlyFee_Tests, NonStudent_LowBalance_Zero)
+{
+    EXPECT_DOUBLE_EQ(CT3_MonthlyFee(0.0, false), 5.0);
+}
+
+TEST(CT3_MonthlyFee_Tests, NonStudent_LowBalance_JustBelow1000)
+{
+    EXPECT_DOUBLE_EQ(CT3_MonthlyFee(999.9, false), 5.0);
+}
+
+TEST(CT3_MonthlyFee_Tests, NonStudent_MidBalance_LowerBound1000)
+{
+    EXPECT_DOUBLE_EQ(CT3_MonthlyFee(1000.0, false), 2.5);
+}
+
+TEST(CT3_MonthlyFee_Tests, NonStudent_MidBalance_JustBelow5000)
+{
+    EXPECT_DOUBLE_EQ(CT3_MonthlyFee(4999.9, false), 2.5);
+}
+
+TEST(CT3_MonthlyFee_Tests, NonStudent_HighBalance_AtLeast5000)
+{
+    EXPECT_DOUBLE_EQ(CT3_MonthlyFee(5000.0, false), 0.0);
+    EXPECT_DOUBLE_EQ(CT3_MonthlyFee(10000.0, false), 0.0);
+}
+
+// -----------------------------
+// Student cases
+// Rules:
+//   balance < 1000   -> 2.5
+//   balance < 5000   -> 1.0
+//   balance >= 5000  -> 0.0
+// -----------------------------
+TEST(CT3_MonthlyFee_Tests, Student_LowBalance_Zero)
+{
+    EXPECT_DOUBLE_EQ(CT3_MonthlyFee(0.0, true), 2.5);
+}
+
+TEST(CT3_MonthlyFee_Tests, Student_LowBalance_JustBelow1000)
+{
+    EXPECT_DOUBLE_EQ(CT3_MonthlyFee(999.9, true), 2.5);
+}
+
+TEST(CT3_MonthlyFee_Tests, Student_MidBalance_LowerBound1000)
+{
+    EXPECT_DOUBLE_EQ(CT3_MonthlyFee(1000.0, true), 1.0);
+}
+
+TEST(CT3_MonthlyFee_Tests, Student_MidBalance_JustBelow5000)
+{
+    EXPECT_DOUBLE_EQ(CT3_MonthlyFee(4999.9, true), 1.0);
+}
+
+TEST(CT3_MonthlyFee_Tests, Student_HighBalance_AtLeast5000)
+{
+    EXPECT_DOUBLE_EQ(CT3_MonthlyFee(5000.0, true), 0.0);
+    EXPECT_DOUBLE_EQ(CT3_MonthlyFee(10000.0, true), 0.0);
+}
+
+
+
+*/
