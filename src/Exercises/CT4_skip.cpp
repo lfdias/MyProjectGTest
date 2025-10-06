@@ -17,30 +17,30 @@ struct Account
 };
 
 // Predicate: checks if amount is positive
-bool CT7_IsPositiveAmount(double a);
+bool CT4_IsPositiveAmount(double a);
 
 // Deposit money: amount must be > 0
-void CT7_deposit(Account& acc, double amount);
+void CT4_deposit(Account& acc, double amount);
 
 // Withdraw money: amount must be > 0 and <= balance
-void CT7_withdraw(Account& acc, double amount);
+void CT4_withdraw(Account& acc, double amount);
 
 // Transfer money: withdraw from one account, deposit to another
-void CT7_transfer(Account& from, Account& to, double amount);
+void CT4_transfer(Account& from, Account& to, double amount);
 
 // Apply simple interest
-double CT7_apply_simple_interest(double principal, double rate, int days);
+double CT4_apply_simple_interest(double principal, double rate, int days);
 
 // -----------------------------
 // Implementations
 // -----------------------------
 
-inline bool CT7_IsPositiveAmount(double a)
+inline bool CT4_IsPositiveAmount(double a)
 {
     return a > 0.0;
 }
 
-inline void CT7_deposit(Account& acc, double amount)
+inline void CT4_deposit(Account& acc, double amount)
 {
     if (amount <= 0.0)
     {
@@ -49,7 +49,7 @@ inline void CT7_deposit(Account& acc, double amount)
     acc.balance += amount;
 }
 
-inline void CT7_withdraw(Account& acc, double amount)
+inline void CT4_withdraw(Account& acc, double amount)
 {
     if (amount <= 0.0)
     {
@@ -62,13 +62,13 @@ inline void CT7_withdraw(Account& acc, double amount)
     acc.balance -= amount;
 }
 
-inline void CT7_transfer(Account& from, Account& to, double amount)
+inline void CT4_transfer(Account& from, Account& to, double amount)
 {
-    CT7_withdraw(from, amount);
-    CT7_deposit(to, amount);
+    CT4_withdraw(from, amount);
+    CT4_deposit(to, amount);
 }
 
-inline double CT7_apply_simple_interest(double principal, double rate, int days)
+inline double CT4_apply_simple_interest(double principal, double rate, int days)
 {
     if (principal < 0.0)
     {
