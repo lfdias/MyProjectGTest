@@ -20,10 +20,10 @@ set(SOURCE_FILES
     src/Exercises/CT1_asserts.cpp
     src/Exercises/CT2_fixture.cpp
     src/Exercises/CT3_parameterized.cpp 
-    src/Exercises/CT4_typed.cpp
+    src/Exercises/CT4_skip.cpp
     src/Exercises/CT5_death.cpp 
     src/Exercises/CT6_predicated.cpp
-    src/Exercises/CT7_skip.cpp
+    src/Exercises/CT7_Final_Exercise.cpp 
 )
 
 set(TEST_FILES
@@ -34,10 +34,11 @@ set(TEST_FILES
     test/Exercises/test_CT1_asserts.cpp
     test/Exercises/test_CT2_fixture.cpp
     test/Exercises/test_CT3_parameterized.cpp  
-    test/Exercises/test_CT4_typed.cpp
+    test/Exercises/test_CT4_skip.cpp
     test/Exercises/test_CT5_death.cpp
-    test/Exercises/test_CT6_predicated.cpp 
-    test/Exercises/test_CT7_skip.cpp 
+    test/Exercises/test_CT6_predicated.cpp
+    test/Exercises/test_CT7_Final_Exercise.cpp 
+ 
 )
 
 # Add all files to the executable
