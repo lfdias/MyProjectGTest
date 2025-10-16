@@ -11,6 +11,7 @@ cmake --build build -j
 
 # 3) Run tests
 ./build/run_tests
+./build/run_tests --gtest_filter=CT2*
 
 # 4) Generate HTML branch coverage report
 gcovr -r . build \
