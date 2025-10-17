@@ -1,0 +1,441 @@
+########################################
+##             SLIDE                  ##
+########################################
+
+
+cmake --version
+
+g++ --version
+
+git --version
+
+
+########################################
+##             SLIDE                  ##
+########################################
+
+
+cd ~
+
+mkdir MyProjectGTest
+
+ls
+
+
+########################################
+##             SLIDE                  ##
+########################################
+
+
+cd MyProjectGTest
+
+mkdir src include test build external
+
+
+########################################
+##             SLIDE                  ##
+########################################
+
+
+#include <iostream>
+
+int main()
+{
+	std::cout << "\n\n Code is running! \n\n" << std::endl;
+	return 0;
+}
+
+
+########################################
+##             SLIDE                  ##
+########################################
+
+
+cd MyProjectGTest 
+
+g++ -o main src/main.cpp
+
+./main
+
+
+########################################
+##             SLIDE                  ##
+########################################
+
+
+#ifndef MY_MATH_H
+
+#define MY_MATH_H
+
+class MyMath 
+{
+    public:
+
+    ~MyMath() = default;
+
+    int add(int a, int b);
+
+    int multiply(int a, int b);
+};
+
+#endif // MY_MATH_H
+
+
+########################################
+##             SLIDE                  ##
+########################################
+
+
+#include "my_math.h"
+
+int MyMath::add(int a, int b) 
+{
+	return a + b;
+}
+
+int MyMath::multiply(int a, int b) 
+{
+	return a * b;
+}
+
+
+########################################
+##             SLIDE                  ##
+########################################
+
+
+#include <iostream>
+
+#include "../include/my_math.h"
+
+int main() 
+{
+    MyMath math; // Instance of the MyMath class​
+
+    int a = 3;
+    int b = 4;
+
+    std::cout << "Sum: " << math.add(a, b) << std::endl;
+    return 0;
+}
+
+
+g++ -I./include -o my_math src/my_math.cpp src/main.cpp
+
+./my_math
+
+
+########################################
+##             SLIDE                  ##
+########################################
+
+
+cd external 
+
+git clone https://github.com/google/googletest.git
+
+
+########################################
+##             SLIDE                  ##
+########################################
+
+
+#include <gtest/gtest.h>
+
+// Main function for Google Test​
+int main(int argc, char **argv) 
+{
+    ::testing::InitGoogleTest(&argc, argv);
+    return RUN_ALL_TESTS();
+}
+
+
+#include <gtest/gtest.h>
+#include "../include/my_math.h"
+
+TEST(MyMathTest, MultiplyTest) 
+{
+	MyMath math;
+	EXPECT_EQ(math.multiply(2, 3), 6);
+	EXPECT_EQ(math.multiply(-1, 1), -1);
+}
+
+
+########################################
+##             SLIDE                  ##
+########################################
+
+
+# Minimum version of CMake required​
+cmake_minimum_required(VERSION 3.10)
+
+# Project name and C++ standard​
+project(MyMathProject LANGUAGES CXX)
+
+set(CMAKE_CXX_STANDARD 17)
+
+set(CMAKE_CXX_STANDARD_REQUIRED True)
+
+# Header directories​
+include_directories(include)
+
+# Add Google Test​
+add_subdirectory(external/googletest)
+
+# Clear separation between source files of the project and test files​
+set(SOURCE_FILES 
+src/my_math.cpp)
+
+set(TEST_FILES
+test/test_my_math.cpp
+test/main_test_runner.cpp)
+
+# Add all files to the executable​
+add_executable(run_tests ${SOURCE_FILES} ${TEST_FILES})
+
+# Link Google Test and pthread​
+target_link_libraries(run_tests gtest gmock pthread)
+
+
+########################################
+##             SLIDE                  ##
+########################################
+
+
+cd ~/MyProjectGTest/build
+
+cmake ..
+
+make 
+
+
+########################################
+##             SLIDE                  ##
+########################################
+
+
+./run_tests
+
+
+########################################
+##             SLIDE                  ##
+########################################
+
+
+#ifndef UTILITIES_H
+
+#define UTILITIES_
+
+class Utilities {
+
+    public:
+    virtual ~Utilities(); // Destructor​
+    virtual bool isPair(int number) const; // Checks if a number is even
+};
+
+#endif // UTILITIES_H
+
+
+
+
+#include "utilities.h"
+
+Utilities::~Utilities() {}
+
+bool Utilities::isPair(int number) const 
+{ 
+    return number % 2 == 0; // Returns true if the number is even​
+}
+
+
+
+
+#include <gtest/gtest.h>
+
+#include "utilities.h"
+
+// Test for isPair function​
+TEST(UtilitiesTest, IsPair) 
+{
+    Utilities utilities_obj;
+
+    EXPECT_TRUE(utilities_obj.isPair(0)); // 0 is even​
+    EXPECT_TRUE(utilities_obj.isPair(2)); // 2 is even​
+    EXPECT_FALSE(utilities_obj.isPair(1)); // 1 is odd​
+    EXPECT_FALSE(utilities_obj.isPair(-1)); // -1 is odd​
+}
+
+
+########################################
+##             SLIDE                  ##
+########################################
+
+
+# Minimum version of CMake required​
+cmake_minimum_required(VERSION 3.10)
+
+# Project name and C++ standard​
+project(MyMathProject LANGUAGES CXX)
+
+set(CMAKE_CXX_STANDARD 17)
+
+set(CMAKE_CXX_STANDARD_REQUIRED True)
+
+# Header directories​
+include_directories(include)
+
+# Add Google Test​
+add_subdirectory(external/googletest)
+
+# Clear separation between source files of the project and test files​
+set(SOURCE_FILES 
+src/my_math.cpp
+src/utilities.cpp)
+
+set(TEST_FILES
+test/test_my_math.cpp
+test/main_test_runner.cpp
+test/test_utilities.cpp)
+
+# Add all files to the executable​
+add_executable(run_tests ${SOURCE_FILES} ${TEST_FILES})
+
+# Link Google Test and pthread​
+target_link_libraries(run_tests gtest gmock pthread)
+
+
+########################################
+##             SLIDE                  ##
+########################################
+
+
+cd ~/MyProjectGTest/build
+
+cmake ..
+
+make 
+
+./run_tests
+
+########################################
+##             SLIDE                  ##
+########################################
+
+
+#ifndef MOCK_UTILITIES_H
+#define MOCK_UTILITIES_H
+ 
+#include "utilities.h"
+#include <gmock/gmock.h>
+ 
+class MockUtilities : public Utilities 
+{
+    public:
+
+        MOCK_METHOD(bool, isPair, (int number), (const));  
+};
+
+
+#endif // MOCK_UTILITIES_H​
+
+
+
+########################################
+##             SLIDE                  ##
+########################################
+
+#include <gtest/gtest.h>
+#include "my_math.h"
+#include "../test/mocks/mock_utilities.h"
+
+
+TEST(MyMathTest, AddTest) {
+
+    MyMath math;
+    MockUtilities mockUtilities;
+
+    EXPECT_CALL(mockUtilities, isPair(testing::_)).Times(0);  // Check pair call with any value as argument ​
+    EXPECT_EQ(math.add(2, 3), 5);
+    EXPECT_EQ(math.add(-1, 1), 0);
+}
+
+
+TEST(MyMathTest, MultiplyTest) 
+{
+    MyMath math;
+    EXPECT_EQ(math.multiply(2, 3), 6);
+    EXPECT_EQ(math.multiply(-1, 1), -1);
+}
+
+
+########################################
+##             SLIDE                  ##
+########################################
+
+
+cd ~/MyProjectGTest/build
+
+cmake ..
+
+make
+
+./run_tests 
+
+
+########################################
+##             SLIDE                  ##
+########################################
+
+
+# Minimum version of CMake required​
+cmake_minimum_required(VERSION 3.10)
+
+# Project name and C++ standard​
+project(MyMathProject LANGUAGES CXX)
+
+set(CMAKE_CXX_STANDARD 17)
+
+set(CMAKE_CXX_STANDARD_REQUIRED True)
+
+# Header directories​
+include_directories(include)
+
+# Add Google Test​
+add_subdirectory(external/googletest)
+
+# Clear separation between source files of the project and test files​
+set(SOURCE_FILES 
+src/my_math.cpp
+src/utilities.cpp)
+
+set(TEST_FILES
+test/test_my_math.cpp
+test/main_test_runner.cpp
+test/test_utilities.cpp)
+
+# Add all files to the executable​
+add_executable(run_tests ${SOURCE_FILES} ${TEST_FILES})
+
+# Link Google Test and pthread​
+target_link_libraries(run_tests gtest gmock pthread)
+
+# Enable coverage flags for GCC​
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -g -O0 --coverage -fprofile-arcs -ftest-coverage")
+set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -g -O0 --coverage -fprofile-arcs -ftest-coverage")
+
+# Link coverage libraries​
+set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} --coverage")
+
+
+########################################
+##             SLIDE                  ##
+########################################
+
+
+cd ~/MyProjectGTest/
+
+gcovr -r . --object-directory build --filter 'src/.*' --html --html-details --branches -o coverage_report.html --verbose
+
+firefox coverage_report.html
+
+
