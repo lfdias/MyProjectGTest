@@ -6,70 +6,74 @@ using namespace mylib;
 namespace fs = std::filesystem;
 
 // 1) ASSERTS
-TEST(BasicAsserts, Add_Works) {
+TEST(CT7_FE_P1_BasicAsserts, Add_Works) {
     // TODO: EXPECT_EQ(Add(2, 3), 5);
 }
 
-TEST(BasicAsserts, Divide_ThrowsOnZero) {
+TEST(CT7_FE_P1_BasicAsserts, Divide_ThrowsOnZero) {
     // TODO: EXPECT_THROW(Divide(10, 0), std::invalid_argument);
 }
 
-TEST(BasicAsserts, Factorial_Boundaries) {
+TEST(CT7_FE_P1_BasicAsserts, Factorial_Boundaries) {
     // TODO: Factorial(0)==1, Factorial(5)==120
-    // TODO: Factorial(-1) lança std::invalid_argument
+    // TODO: Factorial(-1) throws std::invalid_argument
 }
 
 // 2) FIXTURE
-class AccumulatorTest : public ::testing::Test {
+class CT7_FE_P1_AccumulatorTest : public ::testing::Test {
 protected:
     void SetUp() override { acc.Reset(); }
     Accumulator acc;
 };
 
-TEST_F(AccumulatorTest, StartsAtZero) {
+TEST_F(CT7_FE_P1_AccumulatorTest, StartsAtZero) {
     // TODO
 }
 
-TEST_F(AccumulatorTest, Add_AccumulatesValues) {
+TEST_F(CT7_FE_P1_AccumulatorTest, Add_AccumulatesValues) {
     // TODO
 }
 
 // 3) PARAMETERIZED
-class IsEvenParamTest : public ::testing::TestWithParam<int> {};
-TEST_P(IsEvenParamTest, ReturnsTrueForEvenNumbers) {
+class CT7_FE_P1_IsEvenParamTest : public ::testing::TestWithParam<int> {};
+TEST_P(CT7_FE_P1_IsEvenParamTest, ReturnsTrueForEvenNumbers) {
     // TODO
 }
-INSTANTIATE_TEST_SUITE_P(EvenNumbers, IsEvenParamTest,
-    ::testing::Values(0, 2, 4, 100, -6));
+INSTANTIATE_TEST_SUITE_P(
+    CT7_FE_P1_EvenNumbers, CT7_FE_P1_IsEvenParamTest,
+    ::testing::Values(0, 2, 4, 100, -6)
+);
 
-class IsOddParamTest : public ::testing::TestWithParam<int> {};
-TEST_P(IsOddParamTest, ReturnsFalseForOddNumbers) {
+class CT7_FE_P1_IsOddParamTest : public ::testing::TestWithParam<int> {};
+TEST_P(CT7_FE_P1_IsOddParamTest, ReturnsFalseForOddNumbers) {
     // TODO
 }
-INSTANTIATE_TEST_SUITE_P(OddNumbers, IsOddParamTest,
-    ::testing::Values(1, 3, 5, -9));
+INSTANTIATE_TEST_SUITE_P(
+    CT7_FE_P1_OddNumbers, CT7_FE_P1_IsOddParamTest,
+    ::testing::Values(1, 3, 5, -9)
+);
 
 // 4) PREDICATE
-TEST(PredicateTests, ValueIsBetweenExclusive) {
+TEST(CT7_FE_P1_PredicateTests, ValueIsBetweenExclusive) {
     // TODO: EXPECT_PRED3(IsStrictlyBetween, 5, 0, 10);
 }
 
 // 5) DEATH TESTS
-TEST(DeathTests, AbortOnNegative) {
+TEST(CT7_FE_P1_DeathTests, AbortOnNegative) {
     // TODO: EXPECT_DEATH(CrashIfNegative(-1), "negative");
 }
 
-TEST(DeathTests, NoAbortOnNonNegative) {
+TEST(CT7_FE_P1_DeathTests, NoAbortOnNonNegative) {
     // TODO: EXPECT_NO_THROW(CrashIfNegative(0));
 }
 
-TEST(DeathTests, ExitCodeCheckExample) {
-    auto child = [](){ std::exit(0); };
+TEST(CT7_FE_P1_DeathTests, ExitCodeCheckExample) {
+    auto child = []() { std::exit(0); };
     EXPECT_EXIT(child(), ::testing::ExitedWithCode(0), ".*");
 }
 
 // 6) SKIP
-TEST(SkipExamples, SkipWhenConfigMissing) {
+TEST(CT7_FE_P1_SkipExamples, SkipWhenConfigMissing) {
     if (!fs::exists("config.json")) {
         GTEST_SKIP() << "config.json not found — skipping test";
     }
@@ -77,6 +81,6 @@ TEST(SkipExamples, SkipWhenConfigMissing) {
 }
 
 // 7) DISABLE
-TEST(FeatureX, DISABLED_TODO_ImplementMe) {
-    // Este teste não vai correr até remover o prefixo
+TEST(CT7_FE_P1_FeatureX, DISABLED_TODO_ImplementMe) {
+    // This test will not run until the prefix is removed
 }

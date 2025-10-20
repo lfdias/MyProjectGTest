@@ -1,4 +1,4 @@
-#pragma once
+
 #include <cstdlib>   // std::abort
 #include <iostream>  // std::cerr
 

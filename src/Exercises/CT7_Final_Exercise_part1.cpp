@@ -1,4 +1,4 @@
-#pragma once
+
 #include <vector>
 #include <stdexcept>
 #include <cstdlib>   // std::abort
