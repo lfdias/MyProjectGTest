@@ -23,8 +23,8 @@ set(SOURCE_FILES
     src/Exercises/CT4_skip.cpp
     src/Exercises/CT5_death.cpp 
     src/Exercises/CT6_predicated.cpp
-    src/Exercises/CT7_Final_Exercise_part1.cpp
-    src/Exercises/CT7_Final_Exercise_part2.cpp  
+    src/Exercises/CT7_FE_part1.cpp
+    src/Exercises/CT7_FE_part2.cpp  
 )
 
 set(TEST_FILES
@@ -38,8 +38,8 @@ set(TEST_FILES
     test/Exercises/test_CT4_skip.cpp
     test/Exercises/test_CT5_death.cpp
     test/Exercises/test_CT6_predicated.cpp
-    test/Exercises/test_CT7_Final_Exercise_part1.cpp
-    test/Exercises/test_CT7_Final_Exercise_part2.cpp 
+    test/Exercises/test_CT7_FE_part1.cpp
+    test/Exercises/test_CT7_FE_part2.cpp 
  
 )
 

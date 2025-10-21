@@ -1,6 +1,6 @@
 #include <gtest/gtest.h>
 #include <filesystem>
-#include "../../src/Exercises/CT7_Final_Exercise_part1.cpp"
+#include "../../src/Exercises/CT7_FE_part1.cpp"
 
 using namespace mylib;
 namespace fs = std::filesystem;
