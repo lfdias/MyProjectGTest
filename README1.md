@@ -6,15 +6,62 @@ rm -rf build GTest/build external/googletest/build
 find . -name '*.gcda' -o -name '*.gcno' -delete
 
 # 2) Configure and build with GCC 11.4
+# Set the C and C++ compilers to use with CMake.
+# Here we explicitly select GCC 11 and G++ 11 instead of the system defaults.
 CC=/usr/bin/gcc-11 CXX=/usr/bin/g++-11 \
+
+# Run CMake to configure the project.
+# -S .                 → Specifies the source directory (the current folder).
+# -B build             → Specifies the build directory where CMake will generate all build files.
+# -DCMAKE_BUILD_TYPE=Debug → Sets the build type to "Debug" (includes debug symbols and disables optimizations).
 cmake -S . -B build -DCMAKE_BUILD_TYPE=Debug
+
+# Build the project using the previously generated configuration.
+# --build build        → Tells CMake to build the project located in the "build" directory.
+# -j                   → Enables parallel compilation using multiple CPU cores (faster builds).
 cmake --build build -j
+
 
 # 3) Run tests
 ./build/run_tests
 ./build/run_tests --gtest_filter=CT2*
 
 # 4) Generate HTML branch coverage report
+
+# -r . build
+#   -r .        → Sets the root directory for the project (current directory).
+#   build       → Directory where gcovr will look for coverage data generated during compilation and testing.
+gcovr -r . build \
+
+# --exclude 'test/.*'
+#   Excludes all files and folders under "test/" from the coverage report
+#   so that only the application code is measured, not the test code itself.
+  --exclude 'test/.*' \
+
+# --filter 'src/.*'
+#   Filters coverage to only include source files inside the "src/" directory.
+  --filter 'src/.*' \
+
+# --html --html-details
+#   Generates the coverage report in HTML format with detailed per-file breakdowns.
+  --html --html-details \
+
+# --branches
+#   Includes branch coverage information (not just line coverage),
+#   giving a more complete picture of how well the code is tested.
+  --branches \
+
+# --gcov-executable /usr/bin/gcov-11
+#   Specifies which gcov binary to use — here, gcov version 11
+#   to match the GCC compiler used to build the project.
+  --gcov-executable /usr/bin/gcov-11 \
+
+# -o coverage_report.html
+#   Defines the name of the output file where the HTML coverage report will be saved.
+  -o coverage_report.html
+
+
+# 5) Coverage full command 
 gcovr -r . build \
   --exclude 'test/.*' \
   --filter 'src/.*' \
@@ -22,6 +69,8 @@ gcovr -r . build \
   --gcov-executable /usr/bin/gcov-11 \
   -o coverage_report.html
 
+# 6) See the report 
+firefox coverage_report.html
 
 
 ✅ From inside build/ (~/MyProjectGTest/build)
