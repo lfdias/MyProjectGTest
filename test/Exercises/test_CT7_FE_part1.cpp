@@ -1,86 +1,96 @@
 #include <gtest/gtest.h>
-#include <filesystem>
-#include "../../src/Exercises/CT7_FE_part1.cpp"
+#include <stdexcept>
+#include <vector>
 
-using namespace mylib;
-namespace fs = std::filesystem;
+// --- Function prototypes (from the file under test) ---
+int Add(int a, int b);
+int Divide(int a, int b);
+int Factorial(int n);
+bool IsEven(int x);
+int Sum(const std::vector<int>& v);
+bool IsStrictlyBetween(int x, int low, int high);
+void CrashIfNegative(int x);
 
-// 1) ASSERTS
-TEST(CT7_FE_P1_BasicAsserts, Add_Works) {
-    // TODO: EXPECT_EQ(Add(2, 3), 5);
+// ===================== Add (PARAMETERIZED) =====================
+
+// Struct for parameterized Add test
+struct AddCase { int a; int b; int expected; };
+
+// Test fixture for Add
+class CT7_FE_P1_Add : public ::testing::TestWithParam<AddCase> {};
+
+// Parameterized test definition
+TEST_P(CT7_FE_P1_Add, AddsCorrectly) {
+    // TODO: Add implementation
+    // Use GetParam() to access the current AddCase
 }
 
-TEST(CT7_FE_P1_BasicAsserts, Divide_ThrowsOnZero) {
-    // TODO: EXPECT_THROW(Divide(10, 0), std::invalid_argument);
-}
-
-TEST(CT7_FE_P1_BasicAsserts, Factorial_Boundaries) {
-    // TODO: Factorial(0)==1, Factorial(5)==120
-    // TODO: Factorial(-1) throws std::invalid_argument
-}
-
-// 2) FIXTURE
-class CT7_FE_P1_AccumulatorTest : public ::testing::Test {
-protected:
-    void SetUp() override { acc.Reset(); }
-    Accumulator acc;
-};
-
-TEST_F(CT7_FE_P1_AccumulatorTest, StartsAtZero) {
-    // TODO
-}
-
-TEST_F(CT7_FE_P1_AccumulatorTest, Add_AccumulatesValues) {
-    // TODO
-}
-
-// 3) PARAMETERIZED
-class CT7_FE_P1_IsEvenParamTest : public ::testing::TestWithParam<int> {};
-TEST_P(CT7_FE_P1_IsEvenParamTest, ReturnsTrueForEvenNumbers) {
-    // TODO
-}
+// Parameter set for Add test
 INSTANTIATE_TEST_SUITE_P(
-    CT7_FE_P1_EvenNumbers, CT7_FE_P1_IsEvenParamTest,
-    ::testing::Values(0, 2, 4, 100, -6)
+    CT7_FE_P1_, CT7_FE_P1_Add,
+    ::testing::Values(
+        // TODO: Add test cases like AddCase{2, 3, 5}, etc.
+    )
 );
 
-class CT7_FE_P1_IsOddParamTest : public ::testing::TestWithParam<int> {};
-TEST_P(CT7_FE_P1_IsOddParamTest, ReturnsFalseForOddNumbers) {
-    // TODO
-}
-INSTANTIATE_TEST_SUITE_P(
-    CT7_FE_P1_OddNumbers, CT7_FE_P1_IsOddParamTest,
-    ::testing::Values(1, 3, 5, -9)
-);
+// ===================== Divide =====================
 
-// 4) PREDICATE
-TEST(CT7_FE_P1_PredicateTests, ValueIsBetweenExclusive) {
-    // TODO: EXPECT_PRED3(IsStrictlyBetween, 5, 0, 10);
+// Normal division tests
+TEST(CT7_FE_P1, Divide_Normal) {
+    // TODO: Test regular integer division results
 }
 
-// 5) DEATH TESTS
-TEST(CT7_FE_P1_DeathTests, AbortOnNegative) {
-    // TODO: EXPECT_DEATH(CrashIfNegative(-1), "negative");
+// Exception test for division by zero
+TEST(CT7_FE_P1, Divide_ThrowsOnZero) {
+    // TODO: Use EXPECT_THROW to verify exception when b == 0
 }
 
-TEST(CT7_FE_P1_DeathTests, NoAbortOnNonNegative) {
-    // TODO: EXPECT_NO_THROW(CrashIfNegative(0));
+// ===================== Factorial =====================
+
+// Base and loop cases
+TEST(CT7_FE_P1, Factorial_BaseCases) {
+    // TODO: Test factorial(0), factorial(1)
 }
 
-TEST(CT7_FE_P1_DeathTests, ExitCodeCheckExample) {
-    auto child = []() { std::exit(0); };
-    EXPECT_EXIT(child(), ::testing::ExitedWithCode(0), ".*");
+// Multi-iteration case
+TEST(CT7_FE_P1, Factorial_LoopCase) {
+    // TODO: Test factorial(5)
 }
 
-// 6) SKIP
-TEST(CT7_FE_P1_SkipExamples, SkipWhenConfigMissing) {
-    if (!fs::exists("config.json")) {
-        GTEST_SKIP() << "config.json not found — skipping test";
-    }
-    EXPECT_TRUE(true);
+// Negative input exception case
+TEST(CT7_FE_P1, Factorial_ThrowsOnNegative) {
+    // TODO: Test factorial(-1) should throw
 }
 
-// 7) DISABLE
-TEST(CT7_FE_P1_FeatureX, DISABLED_TODO_ImplementMe) {
-    // This test will not run until the prefix is removed
+// ===================== IsEven =====================
+
+// Covers both even and odd cases
+TEST(CT7_FE_P1, IsEven_Branches) {
+    // TODO: Test even and odd integers, including negatives
+}
+
+// ===================== Sum =====================
+
+// Covers empty, positive, and mixed vectors
+TEST(CT7_FE_P1, Sum_Cases) {
+    // TODO: Test empty vector, simple positive, and mixed values
+}
+
+// ===================== IsStrictlyBetween =====================
+
+// Covers all branches (true, false at each limit, outside)
+TEST(CT7_FE_P1, IsStrictlyBetween_AllBranches) {
+    // TODO: Test x between, equal to low, equal to high, below, and above
+}
+
+// ===================== CrashIfNegative =====================
+
+// Path where function does not abort
+TEST(CT7_FE_P1, CrashIfNegative_NoAbortOnNonNegative) {
+    // TODO: Use ASSERT_NO_THROW for non-negative inputs
+}
+
+// Path where function aborts (death test)
+TEST(CT7_FE_P1, CrashIfNegative_AbortsOnNegative) {
+    // TODO: Use ASSERT_DEATH for negative input
 }
