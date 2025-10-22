@@ -434,9 +434,19 @@ set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} --coverage")
 ########################################
 
 
-cd ~/MyProjectGTest/
+cd ~/MyProjectGTest/build
+
+cmake ..
+
+make
+
+./run_tests 
 
 gcovr -r . --object-directory build --filter 'src/.*' --html --html-details --branches -o coverage_report.html --verbose
+
+########################################
+##             SLIDE 41               ##
+########################################
 
 firefox coverage_report.html
 
