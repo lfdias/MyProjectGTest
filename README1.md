@@ -16,6 +16,10 @@ CC=/usr/bin/gcc-11 CXX=/usr/bin/g++-11 \
 # -DCMAKE_BUILD_TYPE=Debug → Sets the build type to "Debug" (includes debug symbols and disables optimizations).
 cmake -S . -B build -DCMAKE_BUILD_TYPE=Debug
 
+# Full command
+CC=/usr/bin/gcc-11 CXX=/usr/bin/g++-11 cmake -S . -B build -DCMAKE_BUILD_TYPE=Debug
+ 
+
 # Build the project using the previously generated configuration.
 # --build build        → Tells CMake to build the project located in the "build" directory.
 # -j                   → Enables parallel compilation using multiple CPU cores (faster builds).
